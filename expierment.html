@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Icon Mapping</title>
+  <link rel="stylesheet" href="/Index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* Define your custom icon styles */
+    .custom-icon {
+      width: 16px;
+      /* Adjust the width and height as needed */
+      height: 16px;
+      /* Add any other styling properties */
+    }
+  </style>
+</head>
+
+<body>
+  <div id="first"></div>
+  <div id="second"></div>
+
+  <script src="index.js"></script>
+  <script type="module">
+
+    function generateHTML(data) {
+      let html = '<ul class="cl-start-wrap">';
+      processItems(data);
+      html += '</ul>';
+
+      function processItems(items, depth = 1) {
+        html += '<ul>';
+        for (const [title, content] of Object.entries(items)) {
+          const iconClass = getIconClass(depth);
+
+          html += '<li class="cl-item">';
+          html += '<div class="cl-label-wrap">';
+          html += `<span class="cl-label-title"><i class="fa ${iconClass}"></i> ${title}</span>`;
+          html += '<span class="cl-label-icon"></span>';
+          html += '</div>';
+
+          if (Array.isArray(content)) {
+            // Process array content
+            html += '<ul>';
+            content.forEach(entry => {
+              const columnIconClass = getTypeIconClass(entry[1]); // Use type for column icon
+              html += '<li class="cl-item">';
+              html += '<div class="cl-label-wrap">';
+              html += `<span class="cl-label-title"><i class="fa ${columnIconClass}"></i> ${entry[0]}</span>`;
+              html += `<span class="column_space"></span>`;
+              html += '</div>';
+              html += '</li>';
+            });
+            html += '</ul>';
+
+          } else if (typeof content === 'object' && Object.keys(content).length > 0) {
+            // Process nested object content
+            processItems(content, depth + 1);
+          }
+
+          html += '</li>';
+        }
+        html += '</ul>';
+      }
+
+      return html;
+    }
+
+
+    function getIconClass(depth) {
+      if (depth === 1) {
+        return 'fa-database'; // Font Awesome database icon class for depth 1
+      } else if (depth === 2) {
+        return 'fa-network-wired'; // Font Awesome folder icon class for depth 2
+      } else if (depth === 3) {
+        return 'fa-table-columns'; // Font Awesome file icon class for depth 3
+      } else {
+        return 'fa-question'; // Default icon class if depth is not 1, 2, or 3
+      }
+    }
+
+    // icons for data types
+    function getTypeIconClass(type) {
+      const typeIcons = {
+        // LOWER CASE
+        // for Date and Time Data Types
+        'date': 'fa-calendar',
+        'datetime': 'fa-calendar',
+        'timestamp': 'fa-calendar',
+        'time': 'fa-calendar',
+        'year': 'fa-calendar',
+
+        'varchar': 'fa-arrow-up-a-z',
+        'char': 'fa-arrow-up-a-z',
+        'binary': 'fa-arrow-up-a-z',
+        'varbinary': 'fa-arrow-up-a-z',
+        'tinyblob': 'fa-arrow-up-a-z',
+        'tinytext': 'fa-arrow-up-a-z',
+        'text': 'fa-arrow-up-a-z',
+        'blob': 'fa-arrow-up-a-z',
+        'mediumtext': 'fa-arrow-up-a-z',
+        'longtext': 'fa-arrow-up-a-z',
+        'longblob': 'fa-arrow-up-a-z',
+        'enum': 'fa-arrow-up-a-z',
+        'set': 'fa-arrow-up-a-z',
+
+        'bigint': 'fa-arrow-up-1-9',
+        'integer': 'fa-arrow-up-1-9',
+        'number': 'fa-arrow-up-1-9',
+        'float': 'fa-arrow-up-1-9',
+        'decimal': 'fa-arrow-up-1-9',
+        'smallint': 'fa-arrow-up-1-9',
+        'double': 'fa-arrow-up-1-9',
+        'dec': 'fa-arrow-up-1-9',
+        'mediumint': 'fa-arrow-up-1-9',
+        'bool': 'fa-arrow-up-1-9',
+        'boolean': 'fa-arrow-up-1-9',
+        'int': 'fa-arrow-up-1-9',
+
+        // UPPER CASE
+        'DATE': 'fa-calendar',
+        'DATETIME': 'fa-calendar',
+        'TIMESTAMP': 'fa-calendar',
+        'TIME': 'fa-calendar',
+        'YEAR': 'fa-calendar',
+
+        'VARCHAR': 'fa-arrow-up-a-z',
+        'CHAR': 'fa-arrow-up-a-z',
+        'BINARY': 'fa-arrow-up-a-z',
+        'VARBINARY': 'fa-arrow-up-a-z',
+        'TINYBLOB': 'fa-arrow-up-a-z',
+        'TINYTEXT': 'fa-arrow-up-a-z',
+        'TEXT': 'fa-arrow-up-a-z',
+        'BLOB': 'fa-arrow-up-a-z',
+        'MEDIUMTEXT': 'fa-arrow-up-a-z',
+        'LONGTEXT': 'fa-arrow-up-a-z',
+        'LONGBLOB': 'fa-arrow-up-a-z',
+        'ENUM': 'fa-arrow-up-a-z',
+        'SET': 'fa-arrow-up-a-z',
+
+        'BIGINT': 'fa-arrow-up-1-9',
+        'INTEGER': 'fa-arrow-up-1-9',
+        'NUMBER': 'fa-arrow-up-1-9',
+        'FLOAT': 'fa-arrow-up-1-9',
+        'DECIMAL': 'fa-arrow-up-1-9',
+        'SMALLINT': 'fa-arrow-up-1-9',
+        'DOUBLE': 'fa-arrow-up-1-9',
+        'DEC': 'fa-arrow-up-1-9',
+        'MEDIUMINT': 'fa-arrow-up-1-9',
+        'BOOL': 'fa-arrow-up-1-9',
+        'BOOLEAN': 'fa-arrow-up-1-9',
+        'INT': 'fa-arrow-up-1-9',
+
+        // first letter uppercase and rest to lowercase 
+        'Date': 'fa-calendar',
+        'Datetime': 'fa-calendar',
+        'Timestamp': 'fa-calendar',
+        'Time': 'fa-calendar',
+        'Year': 'fa-calendar',
+
+        'Varchar': 'fa-arrow-up-a-z',
+        'Char': 'fa-arrow-up-a-z',
+        'Binary': 'fa-arrow-up-a-z',
+        'Varbinary': 'fa-arrow-up-a-z',
+        'Tinyblob': 'fa-arrow-up-a-z',
+        'Tinytext': 'fa-arrow-up-a-z',
+        'Text': 'fa-arrow-up-a-z',
+        'Blob': 'fa-arrow-up-a-z',
+        'Mediumtext': 'fa-arrow-up-a-z',
+        'Longtext': 'fa-arrow-up-a-z',
+        'Longblob': 'fa-arrow-up-a-z',
+        'Enum': 'fa-arrow-up-a-z',
+        'Set': 'fa-arrow-up-a-z',
+
+        'Bigint': 'fa-arrow-up-1-9',
+        'Integer': 'fa-arrow-up-1-9',
+        'Number': 'fa-arrow-up-1-9',
+        'Float': 'fa-arrow-up-1-9',
+        'Decimal': 'fa-arrow-up-1-9',
+        'Smallint': 'fa-arrow-up-1-9',
+        'Double': 'fa-arrow-up-1-9',
+        'Dec': 'fa-arrow-up-1-9',
+        'Mediumint': 'fa-arrow-up-1-9',
+        'Bool': 'fa-arrow-up-1-9',
+        'Boolean': 'fa-arrow-up-1-9',
+        'Int': 'fa-arrow-up-1-9',
+
+        // For mongodb
+        'String': 'fa-arrow-up-a-z',
+        'Integer': 'fa-arrow-up-1-9',
+        'Double': 'fa-arrow-up-1-9',
+        'Boolean': 'fa-arrow-up-1-9',
+        'Date': 'fa-calendar',
+        'Array': 'fa-arrow-up-a-z',
+        'Object': 'fa-arrow-up-a-z',
+        'ObjectId': 'fa-arrow-up-a-z',
+        'Binary Data': 'fa-arrow-up-a-z',
+        'Undefined': 'fa-arrow-up-a-z',
+        'Null': 'fa-arrow-up-a-z',
+        'RegularExpression': 'fa-arrow-up-a-z'
+
+      };
+
+      return typeIcons[type] || 'fa-regular fa-circle'; // Default icon if type is not specified
+    }
+
+    document.body.innerHTML = generateHTML(jsonData);
+  
+
+    // Add event listeners after updating the DOM
+    document.querySelectorAll('.cl-item:not(.cl-item-no-sub) > .cl-label-wrap .cl-label-title').forEach(title => {
+      title.addEventListener('click', () => {
+        title.parentElement.parentElement.classList.toggle('cl-item-open');
+      });
+    });
+
+    document.querySelectorAll('.cl-item:not(.cl-item-no-sub) > .cl-label-wrap .cl-label-icon').forEach(icon => {
+      icon.addEventListener('click', () => {
+        icon.parentElement.parentElement.classList.toggle('cl-item-open');
+      });
+    });
+  </script>
+
+</body>
+
+</html>
